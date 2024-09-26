@@ -4,7 +4,7 @@ import { moderateScale, verticalScale } from 'react-native-size-matters'
 import COLORS from '../../Constants/Colors'
 
 
-const TextLabel = ({ text, color, marginTop, fontFamily, marginBottom, textAlign, fontSize, paddingTop, marginLeft, textDecorationLine, width, onPress, alignSelf, numberOfLines, marginRight, adjustsFontSizeToFit = false, textTransform }) => {
+const TextLabel = ({ fontWeight, text, color, marginTop, fontFamily, marginBottom, textAlign, fontSize, paddingTop, marginLeft, textDecorationLine, width, onPress, alignSelf, numberOfLines, marginRight, adjustsFontSizeToFit = false, textTransform }) => {
 
     return (
         <Text
@@ -19,6 +19,7 @@ const TextLabel = ({ text, color, marginTop, fontFamily, marginBottom, textAlign
                 marginRight: marginRight ? moderateScale(marginRight) : 0,
                 textDecorationLine: textDecorationLine ? textDecorationLine : 'none',
                 textTransform: textTransform ? "uppercase" : 'capitalize',
+                fontWeight: fontWeight && fontWeight,
             }, fontFamily ? fontFamily : {}, fontSize && { fontSize: moderateScale(fontSize) }, width && { width }, alignSelf && { alignSelf: alignSelf }]}
             onPress={onPress}
             numberOfLines={numberOfLines}
