@@ -35,17 +35,20 @@ const networks = {
 
 const App = () => {
   const projectId = 'f8b2c7dcb7f2af60169dbbeb2d8dc7eb';
-  const { open, isConnected, address, provider } = useWalletConnectModal();
+  const { open, isConnected, address, provider, disconnect } = useWalletConnectModal();
   const [error, setError] = useState(null);
   let web3;
 
   const handleButton = async () => {
     if (isConnected) {
-      return provider?.disconnect();
+      await disconnect();
+      web3 = null; // Reset Web3 instance
+    } else {
+      await open();
+
+      // Initialize Web3 only after a successful connection
+
     }
-    await open();
-    // Initialize Web3 after the provider is opened
-    // web3 = new Web3(provider);
   };
 
   const handleNetworkSwitch = async (networkName) => {
@@ -53,15 +56,16 @@ const App = () => {
     try {
       if (!provider) throw new Error("No provider found");
 
-      // Use WalletConnectProvider to send requests
-      await provider.send("wallet_addEthereumChain", [
-        {
-          ...networks[networkName]
-        }
-      ]);
+      // Use WalletConnectModal's methods to switch chains
+      await provider.request({
+        method: "wallet_addEthereumChain",
+        params: [networks[networkName]]
+      });
 
-      // Switch to the network after adding it
-      await provider.send("wallet_switchEthereumChain", [{ chainId: networks[networkName].chainId }]);
+      await provider.request({
+        method: 'wallet_switchEthereumChain',
+        params: [{ chainId: networks[networkName].chainId }]
+      });
     } catch (err) {
       setError(err.message);
       console.error("Failed to switch network:", err);
@@ -72,6 +76,7 @@ const App = () => {
     if (provider) {
       const networkChanged = (chainId) => {
         console.log("Network changed to:", chainId);
+        // You can update UI here based on the new chainId
       };
 
       provider.on("chainChanged", networkChanged);
