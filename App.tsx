@@ -35,21 +35,16 @@ const networks = {
 
 const App = () => {
   const projectId = 'f8b2c7dcb7f2af60169dbbeb2d8dc7eb';
-  const { open, isConnected, address, provider, disconnect } = useWalletConnectModal();
+  const { open, isConnected, address, provider, } = useWalletConnectModal();
   const [error, setError] = useState(null);
   let web3;
 
   const handleButton = async () => {
     if (isConnected) {
-      await disconnect();
-      web3 = null; // Reset Web3 instance
-    } else {
-      await open();
-
-      // Initialize Web3 only after a successful connection
-
+      return provider?.disconnect();
     }
-  };
+    return open();
+  }
 
   const handleNetworkSwitch = async (networkName) => {
     setError(null); // Reset error state
